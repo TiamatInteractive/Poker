@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dv8yaln1ybl5s"]
 
-[ext_resource type="Script" path="res://Card.gd" id="1_a4vre"]
+[ext_resource type="Script" path="res://interface/Card_Base.gd" id="1_45fh1"]
 
 [node name="Card" type="MarginContainer"]
 anchors_preset = 15
@@ -10,6 +10,7 @@ offset_right = -902.0
 offset_bottom = -298.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_a4vre")
+script = ExtResource("1_45fh1")
 
 [node name="card_sprite" type="Sprite2D" parent="."]
+position = Vector2(125, 175)
