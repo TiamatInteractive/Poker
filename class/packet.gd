@@ -7,7 +7,7 @@ func _ready():
 
 func set_new_packet():
 	packet = []
-	var naipe = ["E","P","C","O"]
+	var naipe = ["D","S","C","H"]
 	for i in range(1,14):
 		for j in naipe:
 			packet.append(Card.new(i,j))

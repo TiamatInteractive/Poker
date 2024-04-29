@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://dv8yaln1ybl5s"]
+[gd_scene load_steps=5 format=3 uid="uid://dv8yaln1ybl5s"]
 
 [ext_resource type="Script" path="res://interface/Card_Base.gd" id="1_45fh1"]
+[ext_resource type="Texture2D" uid="uid://dw2p2pjee8hys" path="res://assets/image/S.png" id="3_rlsnk"]
+[ext_resource type="LabelSettings" uid="uid://s41nt7bokng6" path="res://assets/fonts/black_big.tres" id="4_7shxv"]
+[ext_resource type="LabelSettings" uid="uid://dxqcv5rhki8oc" path="res://assets/fonts/black.tres" id="5_bo456"]
 
 [node name="Card" type="MarginContainer"]
 anchors_preset = 15
@@ -14,3 +17,65 @@ script = ExtResource("1_45fh1")
 
 [node name="card_sprite" type="Sprite2D" parent="."]
 position = Vector2(125, 175)
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="UpLabel" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "A"
+label_settings = ExtResource("5_bo456")
+
+[node name="UpSymbol" type="TextureRect" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("3_rlsnk")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MidLabel" type="Label" parent="VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "A"
+label_settings = ExtResource("4_7shxv")
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DownLabel" type="Label" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "A"
+label_settings = ExtResource("5_bo456")
+
+[node name="DownSymbol" type="TextureRect" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("3_rlsnk")
