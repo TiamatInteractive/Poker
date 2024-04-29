@@ -1,27 +1,15 @@
 extends Node
 
-@export var number_players:int = 2
-var table: Array[Card]
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
-
 # Return 0 or [5-14], 0 being that there is not flush and 2-14 the highest value from the flush
-func flush(hand:Hand)->int:
+func flush(hand:Hand, table: Array[Card])->int:
 	var cont = 0
 	var biggest_naipe_id = 0
 	var biggest_naipe_value = 0
 	var naipe_biggest_number: Array[int]
 	var naipe_equal_number: Array[int]
 	var naipe_equal_id: Array[String]
-	var test:Array[Card] = table
-	test.append_array(hand.get_card())
-	for i in test:
+	table.append_array(hand.get_card())
+	for i in table:
 		cont+=1
 		var is_new_naipe = true
 		var id = 0
@@ -134,7 +122,7 @@ func verify_multiple_secondary(all_cards:Array[Card])->int:
 	
 # Return [2-14], being the best card that is not in the four of a kind
 # and not in the first or second pair or three of a kind
-func get_high_card_not_multiple(hand:Hand, is_four:bool)->int:
+func get_high_card_not_multiple(hand:Hand, is_four:bool, table:Array[Card])->int:
 	#Sort array
 	var card1 = hand.card1
 	var card2 = hand.card2
@@ -165,9 +153,9 @@ func get_high_card_not_multiple(hand:Hand, is_four:bool)->int:
 		return card2.get_value()
 	return 0
 	
-func get_value_hand(hand:Hand):
+func get_value_hand(hand:Hand, table:Array[Card]):
 	
-	var is_flush = flush(hand)
+	var is_flush = flush(hand,table)
 	var all_cards:Array[Card] = table
 	all_cards.append_array(hand.get_card())
 	all_cards.sort_custom(compare_by_value)
@@ -180,7 +168,7 @@ func get_value_hand(hand:Hand):
 			return 8000 + is_straight_flush
 	var mult_level = verify_multiple(all_cards)
 	if mult_level >= 7000:
-		return mult_level + get_high_card_not_multiple(hand,true)
+		return mult_level + get_high_card_not_multiple(hand,true,table)
 	var secondary_mult_level = verify_multiple_secondary(all_cards)
 	if mult_level >= 3000 && secondary_mult_level>=1000:
 		return 1000 + ((mult_level-3000)*20+3000) + secondary_mult_level
@@ -189,12 +177,12 @@ func get_value_hand(hand:Hand):
 	if is_straight > 0:
 		return 4000 + is_straight
 	if mult_level >= 3000:
-		return mult_level + get_high_card_not_multiple(hand,false)
+		return mult_level + get_high_card_not_multiple(hand,false,table)
 	if secondary_mult_level >= 1000:
-		return ((mult_level-1000)*20+1000) + secondary_mult_level + get_high_card_not_multiple(hand,false)
+		return ((mult_level-1000)*20+1000) + secondary_mult_level + get_high_card_not_multiple(hand,false,table)
 	if mult_level >= 1000:
-		return mult_level + get_high_card_not_multiple(hand,false)
-	return get_high_card_not_multiple(hand,false)
+		return mult_level + get_high_card_not_multiple(hand,false,table)
+	return get_high_card_not_multiple(hand,false,table)
 	
 func compare_by_value(a,b):
 	return a.get_value() < b.get_value()

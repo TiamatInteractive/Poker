@@ -20,8 +20,10 @@ offset_right = 451.0
 offset_bottom = 556.0
 grow_vertical = 0
 
-[node name="Timer" type="Timer" parent="."]
+[node name="FoldTime" type="Timer" parent="."]
 wait_time = 25.0
+
+[node name="BindIncrement" type="Timer" parent="."]
 
 [connection signal="call_check" from="BetMenu" to="." method="_on_bet_menu_call_check"]
 [connection signal="fold" from="BetMenu" to="." method="_on_bet_menu_fold"]

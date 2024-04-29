@@ -1,3 +1,3 @@
 extends Node
 
-static var pot:int = 0
+static var pot:int = 1000
