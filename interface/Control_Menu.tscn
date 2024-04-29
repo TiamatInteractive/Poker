@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://kgfejgt047y1"]
+
+[ext_resource type="PackedScene" uid="uid://v7w3tpxr42sl" path="res://interface/Bet_Menu.tscn" id="1_hnbnn"]
+[ext_resource type="PackedScene" uid="uid://crdu2rn6senkg" path="res://interface/Action_Menu.tscn" id="2_isare"]
+
+[node name="ControlMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BetMenu" parent="." instance=ExtResource("1_hnbnn")]
+layout_mode = 1
+big_bind = 120
+actual_bet = 0
+max_bet = 10000
+
+[node name="ActionMenu" parent="." instance=ExtResource("2_isare")]
+layout_mode = 1

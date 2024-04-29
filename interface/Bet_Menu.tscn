@@ -1,0 +1,99 @@
+[gd_scene load_steps=2 format=3 uid="uid://v7w3tpxr42sl"]
+
+[ext_resource type="Script" path="res://interface/Bet_Menu.gd" id="1_ch20o"]
+
+[node name="BetMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ch20o")
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+layout_mode = 2
+offset_right = 289.0
+offset_bottom = 91.0
+color = Color(0, 1, 0, 1)
+
+[node name="ActionContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 236.0
+offset_bottom = 31.0
+alignment = 1
+
+[node name="Fold" type="Button" parent="ActionContainer"]
+layout_mode = 2
+text = "Fold"
+
+[node name="Check" type="Button" parent="ActionContainer"]
+layout_mode = 2
+text = "Check"
+
+[node name="Raise" type="Button" parent="ActionContainer"]
+layout_mode = 2
+text = "Raise"
+
+[node name="BetContainer" type="VBoxContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Title" type="HBoxContainer" parent="BetContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="BetContainer/Title"]
+layout_mode = 2
+text = "Quanto irá aumentar?"
+
+[node name="Value" type="HBoxContainer" parent="BetContainer"]
+layout_mode = 2
+
+[node name="RaiseSlider" type="HSlider" parent="BetContainer/Value"]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+step = 10.0
+tick_count = 10
+ticks_on_borders = true
+
+[node name="RaiseValue" type="Label" parent="BetContainer/Value"]
+layout_mode = 2
+text = "100000"
+
+[node name="Buttons" type="HBoxContainer" parent="BetContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Bet" type="Button" parent="BetContainer/Buttons"]
+layout_mode = 2
+text = "Bet"
+
+[node name="HalfPot" type="Button" parent="BetContainer/Buttons"]
+layout_mode = 2
+text = "1/2 Pot"
+
+[node name="TwoThirdPot" type="Button" parent="BetContainer/Buttons"]
+layout_mode = 2
+text = "2/3 Pot"
+
+[node name="Pot" type="Button" parent="BetContainer/Buttons"]
+layout_mode = 2
+text = "Pot"
+
+[node name="AllIn" type="Button" parent="BetContainer/Buttons"]
+layout_mode = 2
+text = "All In"
+
+[node name="Return" type="Button" parent="BetContainer/Buttons"]
+layout_mode = 2
+text = "Return"
+
+[connection signal="pressed" from="ActionContainer/Raise" to="." method="_on_raise_pressed"]
+[connection signal="value_changed" from="BetContainer/Value/RaiseSlider" to="." method="_on_raise_slider_value_changed"]
+[connection signal="pressed" from="BetContainer/Buttons/Bet" to="." method="_on_bet_pressed"]
+[connection signal="pressed" from="BetContainer/Buttons/HalfPot" to="." method="_on_half_pot_pressed"]
+[connection signal="pressed" from="BetContainer/Buttons/TwoThirdPot" to="." method="_on_two_third_pot_pressed"]
+[connection signal="pressed" from="BetContainer/Buttons/Pot" to="." method="_on_pot_pressed"]
+[connection signal="pressed" from="BetContainer/Buttons/AllIn" to="." method="_on_all_in_pressed"]
+[connection signal="pressed" from="BetContainer/Buttons/Return" to="." method="_on_return_pressed"]
