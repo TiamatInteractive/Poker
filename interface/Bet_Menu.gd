@@ -5,6 +5,9 @@ var pot:int = 1000
 @export var actual_bet:int = 0
 @export var max_bet:int = 10000
 var raise_value:int = 0
+signal call_check()
+signal raise(value:int)
+signal fold()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -51,9 +54,6 @@ func _on_half_pot_pressed():
 	raise_value = int(pot/2)
 
 
-func _on_bet_pressed():
-	pass # Replace with function body.
-
 
 func _on_all_in_pressed():
 	raise_value = max_bet
@@ -61,3 +61,13 @@ func _on_all_in_pressed():
 
 func _on_raise_slider_value_changed(value):
 	raise_value = value
+
+
+func _on_check_pressed():
+	call_check.emit()
+
+func _on_fold_pressed():
+	fold.emit()
+
+func _on_bet_pressed():
+	raise.emit(raise_value)

@@ -12,7 +12,7 @@ grow_vertical = 2
 script = ExtResource("1_ch20o")
 
 [node name="ColorRect2" type="ColorRect" parent="."]
-layout_mode = 2
+layout_mode = 0
 offset_right = 289.0
 offset_bottom = 91.0
 color = Color(0, 1, 0, 1)
@@ -36,6 +36,7 @@ layout_mode = 2
 text = "Raise"
 
 [node name="BetContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
@@ -89,6 +90,8 @@ text = "All In"
 layout_mode = 2
 text = "Return"
 
+[connection signal="pressed" from="ActionContainer/Fold" to="." method="_on_fold_pressed"]
+[connection signal="pressed" from="ActionContainer/Check" to="." method="_on_check_pressed"]
 [connection signal="pressed" from="ActionContainer/Raise" to="." method="_on_raise_pressed"]
 [connection signal="value_changed" from="BetContainer/Value/RaiseSlider" to="." method="_on_raise_slider_value_changed"]
 [connection signal="pressed" from="BetContainer/Buttons/Bet" to="." method="_on_bet_pressed"]
