@@ -11,7 +11,7 @@ func _ready():
 func _process(delta):
 	pass
 
-# Return 0 or [2-14], 0 being that there is not flush and 2-14 the highest value from the flush
+# Return 0 or [5-14], 0 being that there is not flush and 2-14 the highest value from the flush
 func flush(hand:Hand)->int:
 	var cont = 0
 	var biggest_naipe_id = 0
@@ -67,9 +67,20 @@ func straight(all_cards:Array[Card])->int:
 	
 # Return 0 or [5-14], 0 being that there is not a straight_flush and 2-14 the highest value from the straight_flush
 func straight_flush(all_cards:Array[Card])->int:
-	# Remove not straight
-	# Verify sequence
-	return 0
+	var naipe : Dictionary = {}
+	for i in all_cards:
+		if naipe.has(i.color):
+			naipe[i.color] += 1
+		else:
+			naipe[i.color] = 1
+	var naipe_color = ""
+	var naipe_value = 0
+	for i in naipe.keys():
+		if naipe_value < naipe[i]:
+			naipe_color = i
+			naipe_value = naipe[i]
+	var straight_flush_value = straight(all_cards.filter(func(card): return card.color != naipe_color))
+	return straight_flush_value
 	
 # Return 0 or [1000-1014] or [3000-3014] or [7000-7014]
 # 0 being that there is no multiple value
