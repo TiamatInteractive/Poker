@@ -24,19 +24,16 @@ func _ready():
 func _process(_delta):
 	pass
 
-
 func _on_bet_menu_call_check():
 	players[id_player_actual].actual_bet = actual_bet
 	players[id_player_actual].stack -= actual_bet
 	next_player()
 	#call/check animation
 
-
 func _on_bet_menu_fold():
 	players[id_player_actual].is_playing = false
 	next_player()
 	#fold animation
-
 
 func _on_bet_menu_raise(value):
 	players[id_player_actual].actual_bet = value
