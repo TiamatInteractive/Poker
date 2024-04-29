@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3 uid="uid://bt253hpsg673w"]
+
+[ext_resource type="PackedScene" uid="uid://v7w3tpxr42sl" path="res://interface/Bet_Menu.tscn" id="1_e1hwg"]
+[ext_resource type="Script" path="res://Game.gd" id="1_eueyh"]
+
+[node name="Game" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_eueyh")
+
+[node name="BetMenu" parent="." instance=ExtResource("1_e1hwg")]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+offset_left = 451.0
+offset_top = 556.0
+offset_right = 451.0
+offset_bottom = 556.0
+grow_vertical = 0
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 25.0
+
+[connection signal="call_check" from="BetMenu" to="." method="_on_bet_menu_call_check"]
+[connection signal="fold" from="BetMenu" to="." method="_on_bet_menu_fold"]
+[connection signal="raise" from="BetMenu" to="." method="_on_bet_menu_raise"]
