@@ -1,0 +1,8 @@
+[gd_resource type="LabelSettings" load_steps=2 format=3 uid="uid://dxqcv5rhki8oc"]
+
+[ext_resource type="FontFile" uid="uid://c5de56q5r3r4m" path="res://assets/LoftygoalsRegular-9Y5Xy.otf" id="1_slixu"]
+
+[resource]
+font = ExtResource("1_slixu")
+font_size = 30
+font_color = Color(0, 0, 0, 1)

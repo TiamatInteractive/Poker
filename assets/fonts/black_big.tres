@@ -1,0 +1,8 @@
+[gd_resource type="LabelSettings" load_steps=2 format=3 uid="uid://s41nt7bokng6"]
+
+[ext_resource type="FontFile" uid="uid://c5de56q5r3r4m" path="res://assets/LoftygoalsRegular-9Y5Xy.otf" id="1_7f47k"]
+
+[resource]
+font = ExtResource("1_7f47k")
+font_size = 120
+font_color = Color(0, 0, 0, 1)
