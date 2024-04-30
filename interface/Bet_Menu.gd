@@ -1,7 +1,7 @@
 extends Control
 
 var pot:int = 1000
-@export var big_bind = 120
+@export var min_bet = 120
 @export var actual_bet:int = 0
 @export var max_bet:int = 10000
 var raise_value:int = 120
@@ -28,8 +28,8 @@ func _ready():
 	else:
 		$BetContainer/Buttons/Pot.visible = false
 	$BetContainer/Value/RaiseSlider.max_value = max_bet
-	if actual_bet < big_bind:
-		$BetContainer/Value/RaiseSlider.min_value = big_bind
+	if actual_bet < min_bet:
+		$BetContainer/Value/RaiseSlider.min_value = min_bet
 	else:
 		$BetContainer/Value/RaiseSlider.min_value = actual_bet
 	$BetContainer/Value/RaiseSlider.step = 1

@@ -25,7 +25,7 @@ func flush(hand:Hand, table: Array[Card])->int:
 		if i.get_value() > naipe_biggest_number[id]:
 			naipe_biggest_number[id] = i.get_value()
 		if naipe_equal_number[id] > biggest_naipe_value:
-			biggest_naipe_value = naipe_equal_id[id]
+			biggest_naipe_value = naipe_equal_number[id]
 			biggest_naipe_id = id
 		if biggest_naipe_value - cont <= -3:
 			return 0
