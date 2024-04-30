@@ -87,6 +87,9 @@ func verify_multiple(all_cards:Array[Card])->int:
 			if is_multi_equal > multiple:
 				value = all_cards[i-1].get_value()
 				multiple = is_multi_equal
+	if is_multi_equal > multiple:
+		value = all_cards[all_cards.size()-1].get_value()
+		multiple = is_multi_equal
 	if multiple == 3:
 		return 7000 + value
 	if multiple == 2:
@@ -155,8 +158,8 @@ func get_high_card_not_multiple(hand:Hand, is_four:bool, table:Array[Card])->int
 	
 func get_value_hand(hand:Hand, table:Array[Card]):
 	
-	var is_flush = flush(hand,table)
-	var all_cards:Array[Card] = table
+	var is_flush = flush(hand,table.duplicate())
+	var all_cards:Array[Card] = table.duplicate()
 	all_cards.append_array(hand.get_card())
 	all_cards.sort_custom(compare_by_value)
 	var is_straight = straight(all_cards)
