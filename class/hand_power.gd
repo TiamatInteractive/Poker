@@ -12,7 +12,7 @@ func flush(hand:Hand, table: Array[Card])->int:
 	for i in table:
 		cont+=1
 		var is_new_naipe = true
-		var id = 0
+		var id = naipe_equal_id.size()
 		for j in range(naipe_equal_id.size()):
 			if naipe_equal_id[j] == i.color:
 				is_new_naipe = false
@@ -29,7 +29,9 @@ func flush(hand:Hand, table: Array[Card])->int:
 			biggest_naipe_id = id
 		if biggest_naipe_value - cont <= -3:
 			return 0
-	if biggest_naipe_value>4:
+	for i in range(naipe_equal_number.size()):
+		print("Naipe " + naipe_equal_id[i] + "  " + str(naipe_equal_number[i]))
+	if biggest_naipe_value > 4:
 		return naipe_biggest_number[biggest_naipe_id]
 	return 0
 
@@ -156,8 +158,31 @@ func get_high_card_not_multiple(hand:Hand, is_four:bool, table:Array[Card])->int
 		return card2.get_value()
 	return 0
 	
-func get_value_hand(hand:Hand, table:Array[Card]):
+func get_high_card(hand:Hand, table:Array[Card])-> int:
+	table.sort_custom(compare_by_value)
+	var card1 = hand.card1
+	var card2 = hand.card2
+	if card1.get_value() < card2.get_value():
+		var cop = card1
+		card1 = card2
+		card2 = cop
+	var card_atual = card1
+	var cont = 0
+	var find = 0
+	var total = 0
+	while cont + find<5 && find<2:
+		if card_atual.get_value() > table[cont].get_value():
+			if find == 0:
+				total += (card_atual.get_value()-1) * 13
+				card_atual = card2
+			else:
+				total += card_atual.get_value()
+			find +=1
+		else:
+			cont += 1
+	return total
 	
+func get_value_hand(hand:Hand, table:Array[Card]):
 	var is_flush = flush(hand,table.duplicate())
 	var all_cards:Array[Card] = table.duplicate()
 	all_cards.append_array(hand.get_card())
@@ -185,7 +210,7 @@ func get_value_hand(hand:Hand, table:Array[Card]):
 		return ((mult_level-1000)*20+1000) + secondary_mult_level + get_high_card_not_multiple(hand,false,table)
 	if mult_level >= 1000:
 		return mult_level + get_high_card_not_multiple(hand,false,table)
-	return get_high_card_not_multiple(hand,false,table)
+	return get_high_card(hand,table)
 	
 func compare_by_value(a,b):
 	return a.get_value() < b.get_value()

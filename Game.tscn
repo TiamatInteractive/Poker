@@ -21,10 +21,6 @@ offset_right = 451.0
 offset_bottom = 556.0
 grow_vertical = 0
 
-[node name="FoldTime" type="Timer" parent="."]
-wait_time = 180.0
-one_shot = true
-
 [node name="BindIncrement" type="Timer" parent="."]
 
 [node name="Start" type="Timer" parent="."]
@@ -37,6 +33,5 @@ one_shot = true
 [connection signal="call_check" from="BetMenu" to="." method="_on_bet_menu_call_check"]
 [connection signal="fold" from="BetMenu" to="." method="_on_bet_menu_fold"]
 [connection signal="raise" from="BetMenu" to="." method="_on_bet_menu_raise"]
-[connection signal="timeout" from="FoldTime" to="." method="_on_fold_time_timeout"]
 [connection signal="timeout" from="Start" to="." method="_on_start_timeout"]
 [connection signal="timeout" from="Ia" to="." method="_on_ia_timeout"]
