@@ -4,5 +4,5 @@
 
 [resource]
 font = ExtResource("1_dipfr")
-font_size = 30
+font_size = 60
 font_color = Color(1, 0, 0, 1)
