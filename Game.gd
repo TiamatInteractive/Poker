@@ -5,6 +5,12 @@ extends Control
 #2: verify if there is more than one person betting, open 1 card and start bet
 #3: verify if there is more than one person betting, open 1 card and start bet
 #4: verify if there is more than one person betting, if not, not open hands and select winner
+const card_base = preload("res://interface/Card_Base.tscn")
+const xs_cards = [1, 0.50, 0.50, 0.50, 1, 1.50, 1.50, 1.50]
+const ys_cards = [1.50, 1.50, 1, 0.50, 0.50, 0.50, 1, 1.50]
+const x_offset = [72.5,45,0,-45,-72.5,-45,0,-45]
+const y_offset = [0,45,72.5,45,0,-45,75.5,45]
+const rotation_degrees_cards = [0, 45, 90, 135, 180, 225, 270, 315]
 var start_stack:int
 var step:int
 var packet:Packet
@@ -15,6 +21,9 @@ var small_bind:int
 var actual_bet:int
 var players: Array
 var table: Array[Card]
+var hands_draw: Array
+var table_draw: Array
+const scale1 = Vector2(0.25, 0.25)
 @export var number_player:int
 @export var debug:bool = true
 
@@ -31,16 +40,16 @@ func _ready():
 		actual_bet = 0
 		number_player = 8
 		start_stack = 10000
-	#players.append(Player.new(start_stack,false))
+	#players.append(Player.new(start_stack, 0, false))
 	#for i in range(number_player-1):
-		#players.append(Player.new(start_stack))
+		#players.append(Player.new(start_stack, i+1))
 	for i in range(number_player):
-		players.append(Player.new(start_stack))
+		players.append(Player.new(start_stack,i))
 	next_step()
-
+	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
-	pass
+	$Mesa.size = get_viewport_rect().size
 
 func _on_bet_menu_call_check():
 	players[id_player_actual].was_played = true
@@ -120,6 +129,12 @@ func next_step():
 	step+=1
 
 func start_round():
+	for i in hands_draw:
+		$Hands.remove_child(i)
+	hands_draw = []
+	for i in table_draw:
+		$Table.remove_child(i)
+	table_draw = []
 	#1: Start the round
 	packet.set_new_packet()
 	#2: Set big and small binds
@@ -192,6 +207,7 @@ func select_bet(player:Player, bet:int)->int:
 func set_player_start(player:Player) -> Player:
 	player.is_playing = true
 	player.hand = Hand.new(packet.get_card(), packet.get_card())
+	write_hand(player.hand, player.chair)
 	print("1- " + player.hand.card1.get_text() + player.hand.card1.color)
 	print("2- " + player.hand.card2.get_text() + player.hand.card2.color)
 	print()
@@ -209,7 +225,38 @@ func add_card_to_table(quantity:int):
 		draw_card_to_table(card)
 	
 func draw_card_to_table(card:Card):
+	var rect_size = get_viewport_rect().size / 2
+	var new_card1 = card_base.instantiate()
+	new_card1.card = card
+	new_card1.size = Vector2(250,350)
+	new_card1.position = Vector2(rect_size.x-180 + 70*table_draw.size(),rect_size.y-25)
+	new_card1.pivot_offset = Vector2(0, 0)
+	new_card1.scale = scale1
+	$Table.add_child(new_card1, INTERNAL_MODE_BACK)
+	table_draw.append(new_card1)
+	
 	pass
+
+func write_hand(hand: Hand, chair:int):
+	var rect_size = get_viewport_rect().size / 2
+	var new_card1 = card_base.instantiate()
+	new_card1.card = hand.card1
+	new_card1.size = Vector2(250,350)
+	new_card1.position = Vector2((rect_size.x)*xs_cards[chair],rect_size.y*ys_cards[chair])
+	new_card1.pivot_offset = Vector2(0, 0)
+	new_card1.rotation_degrees = rotation_degrees_cards[chair]
+	new_card1.scale = scale1
+	$Hands.add_child(new_card1, INTERNAL_MODE_BACK)
+	hands_draw.append(new_card1)
+	var new_card2 = card_base.instantiate()
+	new_card2.card = hand.card2
+	new_card2.size = Vector2(250,350)
+	new_card2.position = Vector2((rect_size.x)*xs_cards[chair]+x_offset[chair],rect_size.y*ys_cards[chair]+y_offset[chair])
+	new_card2.pivot_offset = Vector2(0, 0)
+	new_card2.rotation_degrees = rotation_degrees_cards[chair]
+	new_card2.scale = scale1
+	$Hands.add_child(new_card2, INTERNAL_MODE_BACK)
+	hands_draw.append(new_card2)
 
 func get_first_player():
 	for i in range(1, number_player):

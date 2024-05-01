@@ -1,9 +1,16 @@
-extends MarginContainer
+extends Control
 
-var card:Card
+var card:Card :
+	get:
+		return card
+	set(value):
+		card = value
+		change_all() 
 
 func _ready():
-	card = Card.new(1,"D")
+	change_all()
+	
+func change_all():
 	if ["H", "D"].has(card.color):
 		$VBoxContainer/HBoxContainer2/DownLabel.label_settings = load("res://assets/fonts/red.tres")
 		$VBoxContainer/HBoxContainer3/MidLabel.label_settings = load("res://assets/fonts/red_big.tres")

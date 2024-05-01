@@ -5,24 +5,26 @@
 [ext_resource type="LabelSettings" uid="uid://s41nt7bokng6" path="res://assets/fonts/black_big.tres" id="4_7shxv"]
 [ext_resource type="LabelSettings" uid="uid://dxqcv5rhki8oc" path="res://assets/fonts/black.tres" id="5_bo456"]
 
-[node name="Card" type="MarginContainer"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = -902.0
-offset_bottom = -298.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Card" type="Control"]
+layout_mode = 3
+offset_right = 250.0
+offset_bottom = 350.0
+size_flags_horizontal = 0
 script = ExtResource("1_45fh1")
 
 [node name="card_sprite" type="Sprite2D" parent="."]
+visible = false
 position = Vector2(125, 175)
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 2
+offset_right = 250.0
+offset_bottom = 350.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
+offset_right = 250.0
+offset_bottom = 350.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
