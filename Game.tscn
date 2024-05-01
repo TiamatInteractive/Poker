@@ -24,10 +24,11 @@ grow_vertical = 0
 [node name="BindIncrement" type="Timer" parent="."]
 
 [node name="Start" type="Timer" parent="."]
-wait_time = 10.0
+wait_time = 0.105
 one_shot = true
 
 [node name="Ia" type="Timer" parent="."]
+wait_time = 0.089
 one_shot = true
 
 [connection signal="call_check" from="BetMenu" to="." method="_on_bet_menu_call_check"]

@@ -29,8 +29,6 @@ func flush(hand:Hand, table: Array[Card])->int:
 			biggest_naipe_id = id
 		if biggest_naipe_value - cont <= -3:
 			return 0
-	for i in range(naipe_equal_number.size()):
-		print("Naipe " + naipe_equal_id[i] + "  " + str(naipe_equal_number[i]))
 	if biggest_naipe_value > 4:
 		return naipe_biggest_number[biggest_naipe_id]
 	return 0
@@ -39,19 +37,22 @@ func flush(hand:Hand, table: Array[Card])->int:
 func straight(all_cards:Array[Card])->int:
 	var biggest_number = 0
 	var straight_size = 0
+	var max_straight_size = 0
 	for i in range(1,all_cards.size()):
+		var card1 = all_cards[i].get_value()
+		var card2 = all_cards[i-1].get_value()
 		if all_cards[i].get_value()==all_cards[i-1].get_value()-1:
 			straight_size+=1
 			if straight_size == 1:
-				biggest_number = all_cards[i].get_value()
+				biggest_number = all_cards[i-1].get_value()
 		elif all_cards[i].get_value()!=all_cards[i-1].get_value():
 			straight_size = 0
-		if straight_size == 5:
+		if straight_size == 4:
 			break
-	if straight_size==4:
+	if straight_size==3:
 		if all_cards[0].number==all_cards[all_cards.size()-1].number-1:
 			straight_size+=1
-	if straight_size==5:
+	if straight_size==4:
 		return biggest_number
 	return 0
 	
@@ -69,7 +70,7 @@ func straight_flush(all_cards:Array[Card])->int:
 		if naipe_value < naipe[i]:
 			naipe_color = i
 			naipe_value = naipe[i]
-	var straight_flush_value = straight(all_cards.filter(func(card): return card.color != naipe_color))
+	var straight_flush_value = straight(all_cards.filter(func(card): return card.color == naipe_color))
 	return straight_flush_value
 	
 # Return 0 or [1000-1014] or [3000-3014] or [7000-7014]
@@ -87,17 +88,18 @@ func verify_multiple(all_cards:Array[Card])->int:
 			is_multi_equal +=1
 		else:
 			if is_multi_equal > multiple:
-				value = all_cards[i-1].get_value()
+				value = all_cards[i-1].get_value() - 1
 				multiple = is_multi_equal
+			is_multi_equal = 0
 	if is_multi_equal > multiple:
-		value = all_cards[all_cards.size()-1].get_value()
+		value = all_cards[all_cards.size()-1].get_value()-1
 		multiple = is_multi_equal
 	if multiple == 3:
-		return 7000 + value
+		return 70000 + value
 	if multiple == 2:
-		return 3000 + value
+		return 30000 + value
 	if multiple == 1:
-		return 1000 + value
+		return 10000 + value
 	return 0
 	
 # Return 0 or [1000-1014]
@@ -116,47 +118,36 @@ func verify_multiple_secondary(all_cards:Array[Card])->int:
 			if is_multi_equal > multiple:
 				value_second = value
 				multiple_second = multiple
-				value = all_cards[i-1].get_value()
+				value = all_cards[i-1].get_value() - 2
 				multiple = is_multi_equal
 			elif is_multi_equal>multiple_second:
-				value_second = all_cards[i-1].get_value()
+				value_second = all_cards[i-1].get_value() - 2
 				multiple_second = is_multi_equal
+			is_multi_equal = 0
 	if multiple_second == 1:
-		return 1000 + value_second
+		return 10000 + value_second
 	return 0
-	
-# Return [2-14], being the best card that is not in the four of a kind
-# and not in the first or second pair or three of a kind
-func get_high_card_not_multiple(hand:Hand, is_four:bool, table:Array[Card])->int:
-	#Sort array
-	var card1 = hand.card1
-	var card2 = hand.card2
-	var is_equal = false
-	if card1.get_value() == card2.get_value():
-		is_equal = true
-	if card2.get_value()>card1.get_value():
-		var nothing = card1
-		card1 = card2
-		card2 = nothing
-	var multiple = 0
-	for i in table:
-		if i.get_value() == card1.get_value():
-			multiple+=1
-	if is_four:
-		if multiple < 3:
-			return card1.get_value()
-		if !is_equal:
-			return card2.get_value()
-		return 0
-	if 	multiple == 0:
-		return card1.get_value()
-	multiple=0
-	for i in table:
-		if i.get_value() == card2.get_value():
-			multiple+=1	
-	if 	multiple == 0:
-		return card2.get_value()
-	return 0
+func get_high_card_pair(hand:Hand, table:Array[Card], look_at_most:int, not_this:Array[int])-> int:
+	table.sort_custom(compare_by_value)
+	var cards = hand.get_card().filter(func(card): return !not_this.has(card.get_value()))
+	cards.sort_custom(compare_by_value)
+	var second_pointer = 0
+	table = table.filter(func(card): return !not_this.has(card.get_value()))
+	var total_looked = 0
+	var total = 0
+	var first = look_at_most != 1
+	for i in cards:
+		while second_pointer<table.size() && i.get_value() <= table[second_pointer].get_value():
+			second_pointer +=1
+			total_looked +=1
+		if total_looked >= look_at_most:
+			break
+		if first:
+			first = false
+			total += (i.get_value()-1)*14
+		else:
+			total += i.get_value()-2
+	return total
 	
 func get_high_card(hand:Hand, table:Array[Card])-> int:
 	table.sort_custom(compare_by_value)
@@ -173,10 +164,10 @@ func get_high_card(hand:Hand, table:Array[Card])-> int:
 	while cont + find<5 && find<2:
 		if card_atual.get_value() > table[cont].get_value():
 			if find == 0:
-				total += (card_atual.get_value()-1) * 13
+				total += (card_atual.get_value()-1) * 14
 				card_atual = card2
 			else:
-				total += card_atual.get_value()
+				total += card_atual.get_value() -2
 			find +=1
 		else:
 			cont += 1
@@ -191,26 +182,33 @@ func get_value_hand(hand:Hand, table:Array[Card]):
 	if is_flush > 0 && is_straight > 0:
 		var is_straight_flush = straight_flush(all_cards)
 		if is_straight_flush == 14:
-			return 9000
+			return 90000
 		if is_straight_flush>0:
-			return 8000 + is_straight_flush
+			return 80000 + is_straight_flush
 	var mult_level = verify_multiple(all_cards)
-	if mult_level >= 7000:
-		return mult_level + get_high_card_not_multiple(hand,true,table)
+	if mult_level >= 70000:
+		return ((mult_level-70000)*14+70000) + get_high_card_pair(hand,table, 1, [mult_level-70000+1])
 	var secondary_mult_level = verify_multiple_secondary(all_cards)
-	if mult_level >= 3000 && secondary_mult_level>=1000:
-		return 1000 + ((mult_level-3000)*20+3000) + secondary_mult_level
+	if mult_level >= 30000 && secondary_mult_level>=10000:
+		return 20000 + ((mult_level-30000)*14+30000) + secondary_mult_level
 	if is_flush > 0:
-		return 5000 + is_flush
+		return 50000 + is_flush
 	if is_straight > 0:
-		return 4000 + is_straight
-	if mult_level >= 3000:
-		return mult_level + get_high_card_not_multiple(hand,false,table)
-	if secondary_mult_level >= 1000:
-		return ((mult_level-1000)*20+1000) + secondary_mult_level + get_high_card_not_multiple(hand,false,table)
-	if mult_level >= 1000:
-		return mult_level + get_high_card_not_multiple(hand,false,table)
+		return 40000 + is_straight
+	if mult_level >= 30000:
+		var tree_of_kind = (mult_level-30000)*14*14+30000
+		var high_card = get_high_card_pair(hand,table, 2,[mult_level-30000+1])
+		return tree_of_kind + high_card
+	if secondary_mult_level >= 10000:
+		var first_pair = (mult_level-10000)*14*14+10000
+		var second_pair = (secondary_mult_level-10000)*14+10000
+		var hish_card = get_high_card_pair(hand,table, 1, [mult_level-10000+1,secondary_mult_level-10000+2])
+		return first_pair + second_pair + hish_card
+	if mult_level >= 10000:
+		var pair = (mult_level-10000)*14*14+10000
+		var high_card = get_high_card_pair(hand,table, 3,[mult_level-10000+1])
+		return pair + high_card
 	return get_high_card(hand,table)
 	
 func compare_by_value(a,b):
-	return a.get_value() < b.get_value()
+	return a.get_value() > b.get_value()

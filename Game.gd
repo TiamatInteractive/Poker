@@ -29,7 +29,7 @@ func _ready():
 		big_bind = 10
 		small_bind = 5
 		actual_bet = 0
-		number_player = 3
+		number_player = 8
 		start_stack = 10000
 	#players.append(Player.new(start_stack,false))
 	#for i in range(number_player-1):
