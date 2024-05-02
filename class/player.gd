@@ -1,5 +1,7 @@
 class_name Player
 
+var id:String
+var name:String
 var chair:int
 var hand: Hand
 var stack: int
@@ -14,6 +16,8 @@ var is_playing: bool :
 		is_playing = value
 var was_played: bool
 var is_ia:bool
+var action: String
+var mark:String
 
 func _init(stack_:int,chair_:int, is_ia_:bool = true):
 	stack = stack_
@@ -22,3 +26,4 @@ func _init(stack_:int,chair_:int, is_ia_:bool = true):
 	was_played = false
 	is_ia = is_ia_
 	chair = chair_
+	name = "IA " + str(chair_)

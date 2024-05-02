@@ -28,6 +28,7 @@ const scale1 = Vector2(0.25, 0.25)
 @export var debug:bool = true
 
 @onready var bet_menu = $BetMenu
+@onready var ui_menu = $UiBet
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	packet = Packet.new()
@@ -45,22 +46,28 @@ func _ready():
 		#players.append(Player.new(start_stack, i+1))
 	for i in range(number_player):
 		players.append(Player.new(start_stack,i))
-	next_step()
+	ui_menu.set_players_value(players)
+	$Start.start()
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
+	$HBoxContainer.size = Vector2(get_viewport_rect().size.x,0)
+	$HBoxContainer/Pot.text = "Pot: " + str(Bet.pot)
 	$Mesa.size = get_viewport_rect().size
 
 func _on_bet_menu_call_check():
 	players[id_player_actual].was_played = true
+	var t = players[id_player_actual].actual_bet
 	players[id_player_actual].stack -= actual_bet - players[id_player_actual].actual_bet
 	players[id_player_actual].actual_bet = actual_bet
+	players[id_player_actual].action = "check"
 	next_player(true)
 	#call/check animation
 
 func _on_bet_menu_fold():
 	players[id_player_actual].is_playing = false
 	Bet.pot += players[id_player_actual].actual_bet
+	players[id_player_actual].action = "fold"
 	next_player(true)
 	#fold animation
 
@@ -70,6 +77,7 @@ func _on_bet_menu_raise(value):
 	players[id_player_actual].actual_bet = value
 	players[id_player_actual].stack -= value
 	actual_bet = value
+	players[id_player_actual].action = "raise"
 	next_player(true)
 	#raise animation
 
@@ -87,6 +95,7 @@ func _on_fold_time_timeout():
 	_on_bet_menu_fold()
 	
 func next_player(get_next:bool = false):
+	ui_menu.set_player_value(players[id_player_actual])
 	if bet_menu.visible:
 		bet_menu.visible = false
 	#select next player
@@ -103,6 +112,7 @@ func next_player(get_next:bool = false):
 	if players[id_player_actual].was_played:
 		#start next step of the round
 		next_step()
+		return
 	if players[id_player_actual].is_ia:
 		$Ia.start()
 		return
@@ -112,6 +122,7 @@ func next_player(get_next:bool = false):
 
 func next_step():
 	players = players.map(set_player_not_played)
+	ui_menu.set_players_value(players)
 	match step:
 		0:
 			start_round()
@@ -140,44 +151,49 @@ func start_round():
 	#2: Set big and small binds
 	players = players.map(set_player_start)
 	bet_menu.min_bet = big_bind
+	players[id_button].mark = "D"
 	var small_binder = players[(id_button+1)%number_player]
 	var bet = select_bet(small_binder,small_bind)
 	small_binder.actual_bet = bet
 	small_binder.stack -= bet
-	Bet.pot = bet
+	small_binder.mark = "SB"
 	actual_bet = bet
 	players[(id_button+1)%number_player] = small_binder
 	var big_binder = players[(id_button+2)%number_player]
 	bet = select_bet(big_binder,big_bind)
 	big_binder.actual_bet = bet
 	big_binder.stack -= bet
+	big_binder.mark = "BB"
 	if bet > actual_bet:
 		actual_bet = bet
-	Bet.pot += bet
 	players[(id_button+2)%number_player] = big_binder
 	bet_menu.actual_bet = actual_bet
 	id_player_actual = (id_button+2)%number_player
-	next_player()
+	ui_menu.set_players_value(players)
+	next_player(true)
 
 func flop():
 	actual_bet = 0
 	add_card_to_table(3)
 	get_first_player()
-	next_player()
+	id_player_actual = id_button
+	next_player(true)
 	pass
 
 func river():
 	actual_bet = 0
 	add_card_to_table(1)
 	get_first_player()
-	next_player()
+	id_player_actual = id_button
+	next_player(true)
 	pass
 
 func turn():
 	actual_bet = 0
 	add_card_to_table(1)
 	get_first_player()
-	next_player()
+	id_player_actual = id_button
+	next_player(true)
 	pass
 	
 func end_round():
@@ -193,10 +209,16 @@ func end_round():
 			winner_point = point
 		elif point == winner_point:
 			winner_id.append(i)
+	var cont = 0
 	for winner in winner_id:
+		if cont > 0:
+			cont +=1
+		cont += 1
 		print("winner: " + players[winner].hand.card1.get_text() + players[winner].hand.card1.color)
 		print("winner: " + players[winner].hand.card2.get_text() + players[winner].hand.card2.color)
-		players[winner].stack += Bet.pot/winner_id.size()
+		var pot = Bet.pot
+		var pot_value = Bet.pot/winner_id.size()
+		players[winner].stack += pot_value
 	$Start.start()
 	
 func select_bet(player:Player, bet:int)->int:
@@ -206,6 +228,7 @@ func select_bet(player:Player, bet:int)->int:
 
 func set_player_start(player:Player) -> Player:
 	player.is_playing = true
+	player.mark = ""
 	player.hand = Hand.new(packet.get_card(), packet.get_card())
 	write_hand(player.hand, player.chair)
 	print("1- " + player.hand.card1.get_text() + player.hand.card1.color)
@@ -215,6 +238,11 @@ func set_player_start(player:Player) -> Player:
 	
 func set_player_not_played(player:Player) -> Player:
 	player.was_played = false
+	Bet.pot += player.actual_bet
+	player.actual_bet = 0
+	player.action = ""
+	if !player.is_playing:
+		player.action = "Fold"
 	return player
 
 func add_card_to_table(quantity:int):

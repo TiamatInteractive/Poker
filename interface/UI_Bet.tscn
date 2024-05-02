@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://cffwpsat3dr2y"]
+[gd_scene load_steps=3 format=3 uid="uid://cffwpsat3dr2y"]
 
 [ext_resource type="Script" path="res://interface/UI_Bet.gd" id="1_oa2ef"]
+[ext_resource type="LabelSettings" uid="uid://c5ppreaem3la3" path="res://assets/fonts/ui_bet_label.tres" id="2_2dnqy"]
 
 [node name="UiBet" type="Control"]
 layout_mode = 3
@@ -18,6 +19,7 @@ offset_bottom = 23.0
 grow_horizontal = 2
 
 [node name="Player 1" type="VBoxContainer" parent="HBoxContainer"]
+visible = false
 layout_mode = 2
 
 [node name="Mark" type="Label" parent="HBoxContainer/Player 1"]
@@ -41,8 +43,10 @@ text = "Raise
 [node name="Bet" type="Label" parent="HBoxContainer/Player 1"]
 layout_mode = 2
 text = "100 RS"
+label_settings = ExtResource("2_2dnqy")
 
 [node name="Player 2" type="VBoxContainer" parent="HBoxContainer"]
+visible = false
 layout_mode = 2
 
 [node name="Mark" type="Label" parent="HBoxContainer/Player 2"]
@@ -66,8 +70,10 @@ text = "Raise
 [node name="Bet" type="Label" parent="HBoxContainer/Player 2"]
 layout_mode = 2
 text = "100 RS"
+label_settings = ExtResource("2_2dnqy")
 
 [node name="Player 3" type="VBoxContainer" parent="HBoxContainer"]
+visible = false
 layout_mode = 2
 
 [node name="Mark" type="Label" parent="HBoxContainer/Player 3"]
@@ -91,8 +97,10 @@ text = "Raise
 [node name="Bet" type="Label" parent="HBoxContainer/Player 3"]
 layout_mode = 2
 text = "100 RS"
+label_settings = ExtResource("2_2dnqy")
 
 [node name="Player 4" type="VBoxContainer" parent="HBoxContainer"]
+visible = false
 layout_mode = 2
 
 [node name="Mark" type="Label" parent="HBoxContainer/Player 4"]
@@ -116,8 +124,10 @@ text = "Raise
 [node name="Bet" type="Label" parent="HBoxContainer/Player 4"]
 layout_mode = 2
 text = "100 RS"
+label_settings = ExtResource("2_2dnqy")
 
 [node name="Player 5" type="VBoxContainer" parent="HBoxContainer"]
+visible = false
 layout_mode = 2
 
 [node name="Mark" type="Label" parent="HBoxContainer/Player 5"]
@@ -141,8 +151,10 @@ text = "Raise
 [node name="Bet" type="Label" parent="HBoxContainer/Player 5"]
 layout_mode = 2
 text = "100 RS"
+label_settings = ExtResource("2_2dnqy")
 
 [node name="Player 6" type="VBoxContainer" parent="HBoxContainer"]
+visible = false
 layout_mode = 2
 
 [node name="Mark" type="Label" parent="HBoxContainer/Player 6"]
@@ -166,8 +178,10 @@ text = "Raise
 [node name="Bet" type="Label" parent="HBoxContainer/Player 6"]
 layout_mode = 2
 text = "100 RS"
+label_settings = ExtResource("2_2dnqy")
 
 [node name="Player 7" type="VBoxContainer" parent="HBoxContainer"]
+visible = false
 layout_mode = 2
 
 [node name="Mark" type="Label" parent="HBoxContainer/Player 7"]
@@ -191,8 +205,10 @@ text = "Raise
 [node name="Bet" type="Label" parent="HBoxContainer/Player 7"]
 layout_mode = 2
 text = "100 RS"
+label_settings = ExtResource("2_2dnqy")
 
 [node name="Player 8" type="VBoxContainer" parent="HBoxContainer"]
+visible = false
 layout_mode = 2
 
 [node name="Mark" type="Label" parent="HBoxContainer/Player 8"]
@@ -216,6 +232,7 @@ text = "Raise
 [node name="Bet" type="Label" parent="HBoxContainer/Player 8"]
 layout_mode = 2
 text = "100 RS"
+label_settings = ExtResource("2_2dnqy")
 
 [node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
 layout_mode = 2
