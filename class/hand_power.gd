@@ -161,7 +161,7 @@ func get_high_card(hand:Hand, table:Array[Card])-> int:
 	var cont = 0
 	var find = 0
 	var total = 0
-	while cont + find<5 && find<2:
+	while cont + find<5 && find<2 && cont<table.size():
 		if card_atual.get_value() > table[cont].get_value():
 			if find == 0:
 				total += (card_atual.get_value()-1) * 14

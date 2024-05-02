@@ -39,7 +39,7 @@ func _ready():
 		big_bind = 100
 		small_bind = 50
 		actual_bet = 0
-		number_player = 4
+		number_player = 2
 		start_stack = 10000
 	players.append(Player.new(start_stack, 0, false))
 	for i in range(number_player-1):
@@ -106,8 +106,9 @@ func next_player(get_next:bool = false):
 				id_player_actual = id
 				break
 	if players.filter(func(player): return player.is_playing).size() == 1:
-		#Give rewards and reset
-		pass
+		step = 4
+		next_step()
+		return
 	#verify if was ended
 	if players[id_player_actual].was_played:
 		#start next step of the round
@@ -180,7 +181,7 @@ func flop():
 	get_first_player()
 	id_player_actual = id_button
 	next_player(true)
-	pass
+	
 
 func river():
 	actual_bet = 0
@@ -188,7 +189,6 @@ func river():
 	get_first_player()
 	id_player_actual = id_button
 	next_player(true)
-	pass
 
 func turn():
 	actual_bet = 0
@@ -196,7 +196,6 @@ func turn():
 	get_first_player()
 	id_player_actual = id_button
 	next_player(true)
-	pass
 	
 func end_round():
 	var winner_point = 0
@@ -268,7 +267,6 @@ func draw_card_to_table(card:Card):
 	$Table.add_child(new_card1, INTERNAL_MODE_BACK)
 	table_draw.append(new_card1)
 	
-	pass
 
 func write_hand(hand: Hand, chair:int):
 	var rect_size = get_viewport_rect().size / 2
