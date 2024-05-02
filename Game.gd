@@ -231,6 +231,7 @@ func select_bet(player:Player, bet:int)->int:
 func set_player_start(player:Player) -> Player:
 	player.is_playing = true
 	player.mark = ""
+	player.action = ""
 	player.hand = Hand.new(packet.get_card(), packet.get_card())
 	write_hand(player.hand, player.chair)
 	print("1- " + player.hand.card1.get_text() + player.hand.card1.color)
