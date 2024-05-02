@@ -36,8 +36,8 @@ func _ready():
 	id_button = randi_range(0, number_player-1)
 	id_player_actual = id_button
 	if debug:
-		big_bind = 10
-		small_bind = 5
+		big_bind = 100
+		small_bind = 50
 		actual_bet = 0
 		number_player = 8
 		start_stack = 10000
@@ -219,6 +219,8 @@ func end_round():
 		var pot = Bet.pot
 		var pot_value = Bet.pot/winner_id.size()
 		players[winner].stack += pot_value
+	players = players.filter(func(player:Player): return player.stack > 0)
+	number_player = players.size()
 	$Start.start()
 	
 func select_bet(player:Player, bet:int)->int:

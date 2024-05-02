@@ -1,6 +1,9 @@
 extends Control
 
 func set_players_value(players:Array):
+	for i in range(1,9):
+		var path = "HBoxContainer/Player " + str(i)
+		get_node(path).visible = false
 	for i in players:
 		set_player_value(i)
 		
