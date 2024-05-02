@@ -39,13 +39,13 @@ func _ready():
 		big_bind = 100
 		small_bind = 50
 		actual_bet = 0
-		number_player = 8
+		number_player = 4
 		start_stack = 10000
-	#players.append(Player.new(start_stack, 0, false))
-	#for i in range(number_player-1):
-		#players.append(Player.new(start_stack, i+1))
-	for i in range(number_player):
-		players.append(Player.new(start_stack,i))
+	players.append(Player.new(start_stack, 0, false))
+	for i in range(number_player-1):
+		players.append(Player.new(start_stack, i+1))
+	#for i in range(number_player):
+		#players.append(Player.new(start_stack,i))
 	ui_menu.set_players_value(players)
 	$Start.start()
 	

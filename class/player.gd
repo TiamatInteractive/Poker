@@ -26,4 +26,7 @@ func _init(stack_:int,chair_:int, is_ia_:bool = true):
 	was_played = false
 	is_ia = is_ia_
 	chair = chair_
-	name = "IA " + str(chair_)
+	if is_ia:
+		name = "IA " + str(chair_)
+	else:
+		name = "Guilherme"
