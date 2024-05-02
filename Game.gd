@@ -119,6 +119,8 @@ func next_player(get_next:bool = false):
 	$FoldTime.start()
 	bet_menu.visible = true
 	bet_menu.actual_bet = actual_bet
+	var stack = players[id_player_actual].stack
+	bet_menu.max_bet = players[id_player_actual].stack
 
 func next_step():
 	players = players.map(set_player_not_played)

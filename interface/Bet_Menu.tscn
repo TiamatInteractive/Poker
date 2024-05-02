@@ -90,6 +90,7 @@ text = "All In"
 layout_mode = 2
 text = "Return"
 
+[connection signal="property_list_changed" from="." to="." method="_on_property_list_changed"]
 [connection signal="pressed" from="ActionContainer/Fold" to="." method="_on_fold_pressed"]
 [connection signal="pressed" from="ActionContainer/Check" to="." method="_on_check_pressed"]
 [connection signal="pressed" from="ActionContainer/Raise" to="." method="_on_raise_pressed"]
