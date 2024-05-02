@@ -1,6 +1,5 @@
 extends Control
 
-var pot:int = 1000
 @export var min_bet = 120:
 	get:
 		return min_bet
@@ -26,15 +25,15 @@ var pot:int = 1000
 		return max_bet
 	set(value):
 		max_bet = value
-		if max_bet > pot:
+		if max_bet > Bet.pot:
 			$BetContainer/Buttons/Pot.visible = true
 		else:
 			$BetContainer/Buttons/Pot.visible = false
-		if max_bet > int(pot/3 * 2):
+		if max_bet > int(Bet.pot/3 * 2):
 			$BetContainer/Buttons/TwoThirdPot.visible = true
 		else:
 			$BetContainer/Buttons/Pot.visible = false
-		if max_bet > int(pot/2):
+		if max_bet > int(Bet.pot/2):
 			$BetContainer/Buttons/HalfPot.visible = true
 		else:
 			$BetContainer/Buttons/Pot.visible = false
@@ -48,7 +47,6 @@ signal fold()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pot = Bet.pot
 	$BetContainer.visible = false
 	$BetContainer/Value/RaiseSlider.step = 1
 	
@@ -68,14 +66,14 @@ func _on_return_pressed():
 	$BetContainer.visible = false
 
 func _on_pot_pressed():
-	raise_value = pot
+	raise_value = Bet.pot
 
 func _on_two_third_pot_pressed():
-	raise_value = int(pot/3*2)
+	raise_value = int(Bet.pot/3*2)
 
 
 func _on_half_pot_pressed():
-	raise_value = int(pot/2)
+	raise_value = int(Bet.pot/2)
 
 
 
