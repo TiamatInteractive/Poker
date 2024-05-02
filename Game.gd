@@ -66,7 +66,6 @@ func _on_bet_menu_call_check():
 
 func _on_bet_menu_fold():
 	players[id_player_actual].is_playing = false
-	Bet.pot += players[id_player_actual].actual_bet
 	players[id_player_actual].action = "fold"
 	next_player(true)
 	#fold animation
