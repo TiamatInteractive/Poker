@@ -5,6 +5,7 @@ extends Control
 #2: verify if there is more than one person betting, open 1 card and start bet
 #3: verify if there is more than one person betting, open 1 card and start bet
 #4: verify if there is more than one person betting, if not, not open hands and select winner
+var is_host:bool = false
 const card_base = preload("res://interface/Card_Base.tscn")
 const xs_cards = [1, 0.50, 0.50, 0.50, 1, 1.50, 1.50, 1.50]
 const ys_cards = [1.50, 1.50, 1, 0.50, 0.50, 0.50, 1, 1.50]
@@ -25,8 +26,7 @@ var id_player_actual:int
 var big_bind:int
 var small_bind:int
 @export var actual_bet:int
-var players: Array = []
-@export var players_id: Array = []
+var players: Array
 @export var table: Array
 var hands_draw: Array
 var table_draw: Array
@@ -54,23 +54,29 @@ func _ready():
 		#players.append(Player.new(start_stack,i))
 	
 func add_player(peer_id):
-	var test = players_id.duplicate()
-	test.append(peer_id)
-	players_id = test
 	players.append(Player.new(start_stack, number_player, peer_id, false))
 	number_player += 1
+	for i in players:
+		var t = i.chair
+		var l = 1
+	var player_copy = players
+	rpc("update_player",player_copy)
 	if number_player > 1:
 		start_game()
 	
-func add_players_from_id():
-	for i in range(players.size(), players_id.size()):
-		players.append(Player.new(start_stack, number_player, players_id[i], false))
+@rpc("call_remote", "any_peer", "reliable")
+func update_player(player_copy):
+	players = player_copy
+	if step == 0:
+		big_bind = big_binds[0]
+		small_bind = big_bind/2
+		ui_menu.set_players_value(player_copy)
 	
 	
 func start_game():
 	id_button = randi_range(0, number_player-1)
 	id_player_actual = id_button
-	var p = players
+	var t = is_host
 	actual_bet = 0
 	big_bind = big_binds[0]
 	small_bind = big_bind/2
@@ -83,25 +89,32 @@ func _process(_delta):
 	$HBoxContainer.size = Vector2(get_viewport_rect().size.x,0)
 	$HBoxContainer/Pot.text = "Pot: " + str(pot)
 	$Mesa.size = get_viewport_rect().size
-	if players.size()<players_id.size():
-		add_players_from_id()
 
-func _on_bet_menu_call_check():
+@rpc( "any_peer", "reliable")
+func start_all():
+	pot = 0
+	table = []
+	id_button = (id_button + 1)%number_player
+	step = 0
+	next_step()
+
+@rpc("call_local", "any_peer", "reliable")
+func call_check():
 	players[id_player_actual].was_played = true
 	var t = players[id_player_actual].actual_bet
 	players[id_player_actual].stack -= actual_bet - players[id_player_actual].actual_bet
 	players[id_player_actual].actual_bet = actual_bet
 	players[id_player_actual].action = "check"
 	next_player(true)
-	#call/check animation
-
-func _on_bet_menu_fold():
+	
+@rpc("call_local", "any_peer", "reliable")
+func fold():
 	players[id_player_actual].is_playing = false
 	players[id_player_actual].action = "fold"
 	next_player(true)
-	#fold animation
-
-func _on_bet_menu_raise(value):
+	
+@rpc("call_local", "any_peer", "reliable")
+func raise(value):
 	players = players.map(set_player_not_played)
 	players[id_player_actual].was_played = true
 	players[id_player_actual].actual_bet = value
@@ -109,14 +122,19 @@ func _on_bet_menu_raise(value):
 	actual_bet = value
 	players[id_player_actual].action = "raise"
 	next_player(true)
-	#raise animation
+
+func _on_bet_menu_call_check():
+	rpc("call_check")
+
+func _on_bet_menu_fold():
+	rpc("fold")
+	#fold animation
+func _on_bet_menu_raise(value):
+	rpc("raise",value)
 
 func _on_start_timeout():
-	pot = 0
-	table = []
-	id_button = (id_button + 1)%number_player
-	step = 0
-	next_step()
+	rpc("update_player",players as Array[Player])
+	rpc("start_all")
 	
 func _on_ia_timeout():
 	_on_bet_menu_call_check()
@@ -193,6 +211,7 @@ func start_round():
 	packet.set_new_packet()
 	#2: Set big and small binds
 	var p = players
+	var t = is_host
 	players = players.map(set_player_start)
 	bet_menu.min_bet = big_bind
 	players[id_button%number_player].mark = "D"

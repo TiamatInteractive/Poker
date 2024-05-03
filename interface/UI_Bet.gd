@@ -7,7 +7,7 @@ func set_players_value(players:Array):
 	for i in players:
 		set_player_value(i)
 		
-func set_player_value(player:Player):
+func set_player_value(player):
 	var path = "HBoxContainer/Player " + str(player.chair+1)
 	get_node(path).visible = true
 	get_node(path + "/Mark").text = player.mark

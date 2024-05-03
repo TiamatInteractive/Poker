@@ -12,6 +12,7 @@ func _ready():
 
 func _on_host_pressed():
 	table.show()
+	table.is_host = true
 	main_menu.hide()
 	enet_peer.create_server(PORT)
 	multiplayer.multiplayer_peer = enet_peer
@@ -27,6 +28,4 @@ func _on_join_pressed():
 	enet_peer.create_client("localhost",PORT)
 	multiplayer.multiplayer_peer = enet_peer
 	get_tree().paused = false
-	table.add_players_from_id()
-	table.start_game()
 	pass # Replace with function body.
