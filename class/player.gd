@@ -1,6 +1,6 @@
 class_name Player
 
-var id:String
+var id:int
 var name:String
 var chair:int
 var hand: Hand
@@ -19,7 +19,7 @@ var is_ia:bool
 var action: String
 var mark:String
 
-func _init(stack_:int,chair_:int, is_ia_:bool = true):
+func _init(stack_:int,chair_:int, id_:int, is_ia_:bool = true):
 	stack = stack_
 	actual_bet = 0
 	is_playing = true
@@ -30,3 +30,4 @@ func _init(stack_:int,chair_:int, is_ia_:bool = true):
 		name = "IA " + str(chair_)
 	else:
 		name = "Guilherme"
+	id = id_

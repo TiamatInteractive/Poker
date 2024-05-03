@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://v7w3tpxr42sl" path="res://interface/Bet_Menu.tscn" id="3_a0l1h"]
 [ext_resource type="PackedScene" uid="uid://cffwpsat3dr2y" path="res://interface/UI_Bet.tscn" id="4_2blqj"]
 
-[node name="Game" type="Control"]
+[node name="PokerTable" type="Control"]
 layout_mode = 3
 anchors_preset = 0
 size_flags_horizontal = 3

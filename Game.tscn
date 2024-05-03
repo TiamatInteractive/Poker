@@ -1,0 +1,76 @@
+[gd_scene load_steps=4 format=3 uid="uid://jdjrvdpkh57d"]
+
+[ext_resource type="Script" path="res://Game.gd" id="1_fmr3v"]
+[ext_resource type="PackedScene" uid="uid://bt253hpsg673w" path="res://game_table/Poker_Table.tscn" id="2_38sks"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_g6kuh"]
+properties/0/path = NodePath("PokerTable:seed_const")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("PokerTable:id_button")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("PokerTable:players_id")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath("PokerTable:actual_bet")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath("PokerTable:big_binds")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+properties/5/path = NodePath("PokerTable:start_stack")
+properties/5/spawn = true
+properties/5/replication_mode = 1
+properties/6/path = NodePath("PokerTable:debug")
+properties/6/spawn = true
+properties/6/replication_mode = 1
+properties/7/path = NodePath("PokerTable:number_player")
+properties/7/spawn = true
+properties/7/replication_mode = 1
+
+[node name="Game" type="Node"]
+process_mode = 3
+script = ExtResource("1_fmr3v")
+
+[node name="PokerTable" parent="." instance=ExtResource("2_38sks")]
+process_mode = 1
+visible = false
+debug = false
+
+[node name="Main_Menu" type="PanelContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="Main_Menu"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Main_Menu/CenterContainer"]
+layout_mode = 2
+
+[node name="MainMenu" type="Label" parent="Main_Menu/CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Main Menu"
+horizontal_alignment = 1
+
+[node name="Host" type="Button" parent="Main_Menu/CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Host"
+
+[node name="Join" type="Button" parent="Main_Menu/CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Join"
+
+[node name="Addres_Entry" type="LineEdit" parent="Main_Menu/CenterContainer/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Enter Address"
+expand_to_text_length = true
+
+[node name="MultiplayerSynchronizer2" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_g6kuh")
+
+[connection signal="pressed" from="Main_Menu/CenterContainer/VBoxContainer/Host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="Main_Menu/CenterContainer/VBoxContainer/Join" to="." method="_on_join_pressed"]

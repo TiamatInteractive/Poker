@@ -25,21 +25,21 @@ extends Control
 		return max_bet
 	set(value):
 		max_bet = value
-		if max_bet > Bet.pot:
+		if max_bet > pot:
 			$BetContainer/Buttons/Pot.visible = true
 		else:
 			$BetContainer/Buttons/Pot.visible = false
-		if max_bet > int(Bet.pot/3 * 2):
+		if max_bet > int(pot/3 * 2):
 			$BetContainer/Buttons/TwoThirdPot.visible = true
 		else:
 			$BetContainer/Buttons/Pot.visible = false
-		if max_bet > int(Bet.pot/2):
+		if max_bet > int(pot/2):
 			$BetContainer/Buttons/HalfPot.visible = true
 		else:
 			$BetContainer/Buttons/Pot.visible = false
 		$BetContainer/Value/RaiseSlider.max_value = max_bet
-		
-		
+
+var pot:int = 0		
 var raise_value:int = 120
 signal call_check()
 signal raise(value:int)
@@ -66,14 +66,14 @@ func _on_return_pressed():
 	$BetContainer.visible = false
 
 func _on_pot_pressed():
-	raise_value = Bet.pot
+	raise_value = pot
 
 func _on_two_third_pot_pressed():
-	raise_value = int(Bet.pot/3*2)
+	raise_value = int(pot/3*2)
 
 
 func _on_half_pot_pressed():
-	raise_value = int(Bet.pot/2)
+	raise_value = int(pot/2)
 
 
 

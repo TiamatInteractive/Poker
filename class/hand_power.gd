@@ -1,7 +1,7 @@
 extends Node
 
 # Return 0 or [5-14], 0 being that there is not flush and 2-14 the highest value from the flush
-func flush(hand:Hand, table: Array[Card])->int:
+func flush(hand:Hand, table: Array)->int:
 	var cont = 0
 	var biggest_naipe_id = 0
 	var biggest_naipe_value = 0
@@ -34,7 +34,7 @@ func flush(hand:Hand, table: Array[Card])->int:
 	return 0
 
 # Return 0 or [5-14], 0 being that there is not straight and 2-14 the highest value from the straight
-func straight(all_cards:Array[Card])->int:
+func straight(all_cards:Array)->int:
 	var biggest_number = 0
 	var straight_size = 0
 	var max_straight_size = 0
@@ -57,7 +57,7 @@ func straight(all_cards:Array[Card])->int:
 	return 0
 	
 # Return 0 or [5-14], 0 being that there is not a straight_flush and 2-14 the highest value from the straight_flush
-func straight_flush(all_cards:Array[Card])->int:
+func straight_flush(all_cards:Array)->int:
 	var naipe : Dictionary = {}
 	for i in all_cards:
 		if naipe.has(i.color):
@@ -79,7 +79,7 @@ func straight_flush(all_cards:Array[Card])->int:
 # [3000-3014] being that the most valuable a three of a kind and return the value of the three of a kind
 # [7000-7014] being that the most valuable a four of a kind and return the value of the four of a kind
 
-func verify_multiple(all_cards:Array[Card])->int:
+func verify_multiple(all_cards:Array)->int:
 	var multiple = 0
 	var value = 0
 	var is_multi_equal = 0
@@ -105,7 +105,7 @@ func verify_multiple(all_cards:Array[Card])->int:
 # Return 0 or [1000-1014]
 # 0 being that there is no second pair value
 # [1000-1014] being that there is a second pair and return the value of the pair
-func verify_multiple_secondary(all_cards:Array[Card])->int:
+func verify_multiple_secondary(all_cards:Array)->int:
 	var multiple = 0
 	var value = 0
 	var multiple_second = 0
@@ -127,7 +127,7 @@ func verify_multiple_secondary(all_cards:Array[Card])->int:
 	if multiple_second == 1:
 		return 10000 + value_second
 	return 0
-func get_high_card_pair(hand:Hand, table:Array[Card], look_at_most:int, not_this:Array[int])-> int:
+func get_high_card_pair(hand:Hand, table:Array, look_at_most:int, not_this:Array[int])-> int:
 	table.sort_custom(compare_by_value)
 	var cards = hand.get_card().filter(func(card): return !not_this.has(card.get_value()))
 	cards.sort_custom(compare_by_value)
@@ -149,7 +149,7 @@ func get_high_card_pair(hand:Hand, table:Array[Card], look_at_most:int, not_this
 			total += i.get_value()-2
 	return total
 	
-func get_high_card(hand:Hand, table:Array[Card])-> int:
+func get_high_card(hand:Hand, table:Array)-> int:
 	table.sort_custom(compare_by_value)
 	var card1 = hand.card1
 	var card2 = hand.card2
@@ -173,9 +173,9 @@ func get_high_card(hand:Hand, table:Array[Card])-> int:
 			cont += 1
 	return total
 	
-func get_value_hand(hand:Hand, table:Array[Card]):
+func get_value_hand(hand:Hand, table:Array):
 	var is_flush = flush(hand,table.duplicate())
-	var all_cards:Array[Card] = table.duplicate()
+	var all_cards:Array = table.duplicate()
 	all_cards.append_array(hand.get_card())
 	all_cards.sort_custom(compare_by_value)
 	var is_straight = straight(all_cards)

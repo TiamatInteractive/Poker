@@ -11,20 +11,28 @@ const ys_cards = [1.50, 1.50, 1, 0.50, 0.50, 0.50, 1, 1.50]
 const x_offset = [72.5,45,0,-45,-72.5,-45,0,-45]
 const y_offset = [0,45,72.5,45,0,-45,75.5,45]
 const rotation_degrees_cards = [0, 45, 90, 135, 180, 225, 270, 315]
-var start_stack:int
+var pot:int:
+	get:
+		return pot
+	set(value):
+		pot = value
+		bet_menu.pot = value
 var step:int
 var packet:Packet
+@export var seed_const:int = 12
 var id_player_actual:int
-var id_button:int
+@export var id_button:int
 var big_bind:int
 var small_bind:int
-var actual_bet:int
-var players: Array
-var table: Array[Card]
+@export var actual_bet:int
+var players: Array = []
+@export var players_id: Array = []
+@export var table: Array
 var hands_draw: Array
 var table_draw: Array
 const scale1 = Vector2(0.25, 0.25)
-@export var big_binds:Array[int]
+@export var big_binds: Array = [100]
+@export var start_stack = 0
 @export var number_player:int
 @export var debug:bool = true
 
@@ -34,28 +42,49 @@ const scale1 = Vector2(0.25, 0.25)
 func _ready():
 	packet = Packet.new()
 	step = 0
-	id_button = randi_range(0, number_player-1)
-	id_player_actual = id_button
 	if debug:
 		big_binds = [100, 200, 400, 800]
-		actual_bet = 0
 		number_player = 2
 		start_stack = 10000
-		players.append(Player.new(start_stack, 0, false))
+		players.append(Player.new(start_stack, 0, 1, false))
 		for i in range(number_player-1):
-			players.append(Player.new(start_stack, i+1))
-	big_bind = big_binds[0]
-	small_bind = big_bind/2
+			players.append(Player.new(start_stack, i+1,1))
+		start_game()
 	#for i in range(number_player):
 		#players.append(Player.new(start_stack,i))
+	
+func add_player(peer_id):
+	var test = players_id.duplicate()
+	test.append(peer_id)
+	players_id = test
+	players.append(Player.new(start_stack, number_player, peer_id, false))
+	number_player += 1
+	if number_player > 1:
+		start_game()
+	
+func add_players_from_id():
+	for i in range(players.size(), players_id.size()):
+		players.append(Player.new(start_stack, number_player, players_id[i], false))
+	
+	
+func start_game():
+	id_button = randi_range(0, number_player-1)
+	id_player_actual = id_button
+	var p = players
+	actual_bet = 0
+	big_bind = big_binds[0]
+	small_bind = big_bind/2
 	ui_menu.set_players_value(players)
 	$Start.start()
+	
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	$HBoxContainer.size = Vector2(get_viewport_rect().size.x,0)
-	$HBoxContainer/Pot.text = "Pot: " + str(Bet.pot)
+	$HBoxContainer/Pot.text = "Pot: " + str(pot)
 	$Mesa.size = get_viewport_rect().size
+	if players.size()<players_id.size():
+		add_players_from_id()
 
 func _on_bet_menu_call_check():
 	players[id_player_actual].was_played = true
@@ -83,7 +112,7 @@ func _on_bet_menu_raise(value):
 	#raise animation
 
 func _on_start_timeout():
-	Bet.pot = 0
+	pot = 0
 	table = []
 	id_button = (id_button + 1)%number_player
 	step = 0
@@ -126,10 +155,11 @@ func next_player(get_next:bool = false):
 		$Ia.start()
 		return
 	$FoldTime.start()
-	bet_menu.visible = true
-	bet_menu.actual_bet = actual_bet
-	var stack = players[id_player_actual].stack
-	bet_menu.max_bet = players[id_player_actual].stack
+	if multiplayer.get_unique_id() == players[id_player_actual].id:
+		bet_menu.visible = true
+		bet_menu.actual_bet = actual_bet
+		var stack = players[id_player_actual].stack
+		bet_menu.max_bet = players[id_player_actual].stack
 
 func next_step():
 	players = players.map(set_player_not_played)
@@ -158,11 +188,14 @@ func start_round():
 		$Table.remove_child(i)
 	table_draw = []
 	#1: Start the round
+	seed_const = randi_range(0, 100000)
+	seed(seed_const)
 	packet.set_new_packet()
 	#2: Set big and small binds
+	var p = players
 	players = players.map(set_player_start)
 	bet_menu.min_bet = big_bind
-	players[id_button].mark = "D"
+	players[id_button%number_player].mark = "D"
 	var small_binder = players[(id_button+1)%number_player]
 	var bet = select_bet(small_binder,small_bind)
 	small_binder.actual_bet = bet
@@ -225,8 +258,7 @@ func end_round():
 		cont += 1
 		print("winner: " + players[winner].hand.card1.get_text() + players[winner].hand.card1.color)
 		print("winner: " + players[winner].hand.card2.get_text() + players[winner].hand.card2.color)
-		var pot = Bet.pot
-		var pot_value = Bet.pot/winner_id.size()
+		var pot_value = pot/winner_id.size()
 		players[winner].stack += pot_value
 	players = players.filter(func(player:Player): return player.stack > 0)
 	number_player = players.size()
@@ -250,7 +282,7 @@ func set_player_start(player:Player) -> Player:
 	
 func set_player_not_played(player:Player) -> Player:
 	player.was_played = false
-	Bet.pot += player.actual_bet
+	pot += player.actual_bet
 	player.actual_bet = 0
 	player.action = ""
 	if !player.is_playing:
