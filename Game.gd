@@ -24,6 +24,7 @@ var table: Array[Card]
 var hands_draw: Array
 var table_draw: Array
 const scale1 = Vector2(0.25, 0.25)
+@export var big_binds:Array[int]
 @export var number_player:int
 @export var debug:bool = true
 
@@ -36,14 +37,15 @@ func _ready():
 	id_button = randi_range(0, number_player-1)
 	id_player_actual = id_button
 	if debug:
-		big_bind = 100
-		small_bind = 50
+		big_binds = [100, 200, 400, 800]
 		actual_bet = 0
 		number_player = 2
 		start_stack = 10000
-	players.append(Player.new(start_stack, 0, false))
-	for i in range(number_player-1):
-		players.append(Player.new(start_stack, i+1))
+		players.append(Player.new(start_stack, 0, false))
+		for i in range(number_player-1):
+			players.append(Player.new(start_stack, i+1))
+	big_bind = big_binds[0]
+	small_bind = big_bind/2
 	#for i in range(number_player):
 		#players.append(Player.new(start_stack,i))
 	ui_menu.set_players_value(players)
@@ -92,6 +94,13 @@ func _on_ia_timeout():
 	
 func _on_fold_time_timeout():
 	_on_bet_menu_fold()
+	
+func _on_bind_increment_timeout():
+	for i in range(big_binds.size()-1):
+		if big_binds[i] == big_bind:
+			big_bind = big_binds[i+1]
+			small_bind = big_bind/2
+			return
 	
 func next_player(get_next:bool = false):
 	ui_menu.set_player_value(players[id_player_actual])
@@ -296,28 +305,3 @@ func get_first_player():
 
 func get_all_playing(player:Player):
 	return player.is_playing
-
- 
-#1- 4C
-#2- 9H
-#
-#1- AS
-#2- 9D
-#
-#1- 6S
-#2- 2D
-#
-#table:4S
-#table:9S
-#table:10C
-#table:3C
-#table:7H
-#points 0- 0
-#points 1- 0
-#points 2- 0
-#winner: 4C
-#winner: 9H
-#winner: AS
-#winner: 9D
-#winner: 6S
-#winner: 2D

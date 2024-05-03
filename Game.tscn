@@ -34,6 +34,8 @@ offset_bottom = 556.0
 grow_vertical = 0
 
 [node name="BindIncrement" type="Timer" parent="."]
+wait_time = 50.0
+autostart = true
 
 [node name="Start" type="Timer" parent="."]
 wait_time = 5.0
@@ -71,5 +73,7 @@ wait_time = 25.0
 [connection signal="call_check" from="BetMenu" to="." method="_on_bet_menu_call_check"]
 [connection signal="fold" from="BetMenu" to="." method="_on_bet_menu_fold"]
 [connection signal="raise" from="BetMenu" to="." method="_on_bet_menu_raise"]
+[connection signal="timeout" from="BindIncrement" to="." method="_on_bind_increment_timeout"]
 [connection signal="timeout" from="Start" to="." method="_on_start_timeout"]
 [connection signal="timeout" from="Ia" to="." method="_on_ia_timeout"]
+[connection signal="timeout" from="FoldTime" to="." method="_on_fold_time_timeout"]
